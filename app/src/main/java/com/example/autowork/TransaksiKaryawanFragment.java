@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.example.autowork.model.Masuk;
-import com.example.autowork.model.LogHistory;
-import com.example.autowork.model.Meminta;
-import com.example.autowork.MainActivity;
 import com.example.autowork.model.TransaksiKaryawan;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,17 +27,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.zxing.Result;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-//import com.google.zxing.Result;
 
 import java.text.DecimalFormat;
 
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
-
-import static android.os.SystemClock.sleep;
 
 
 /**
@@ -265,7 +253,6 @@ public class TransaksiKaryawanFragment extends Fragment{
                          * JIKA DATA DITEMUKAN MAKA HARGA DI JUMLAHKAN
                          */
                         etBarkod.setEnabled(false);//MENSET EDIT TEXT MENJADI DISABLE TIDAK BISA DI RUBAH
-
                         /**
                          * FUNSI PENJUMLAHAN DISAAT BERSAMAAN KITA MENGETIK DI EDIT TEXT
                          */
