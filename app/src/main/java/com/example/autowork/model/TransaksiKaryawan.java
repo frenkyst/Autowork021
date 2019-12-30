@@ -6,10 +6,10 @@ public class TransaksiKaryawan {
     private String jml;
     private String total;
 
-    public TransaksiKaryawan(String nama, String jml, String laba) {
+    public TransaksiKaryawan(String barkod, String nama, String jml) {
+        this.barkod = barkod;
         this.nama = nama;
         this.jml = jml;
-        this.laba = laba;
     }
 
     private String laba;

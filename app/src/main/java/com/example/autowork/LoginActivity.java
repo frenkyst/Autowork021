@@ -197,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             confim("BOSS");
 
-                        } else if (dataSnapshot.child("Karyawan").getValue(String.class).equals("Ya")){
+                        } else if (dataSnapshot.child("Karyawan").exists()){
 
                             confim("Karyawan");
 

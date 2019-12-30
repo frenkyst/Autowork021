@@ -124,7 +124,7 @@ public class TransaksiKaryawanFragment extends Fragment{
         tvtotaltransaksi = vt.findViewById(R.id.tv_totaltransaksi);
         tvtotaltransaksi1 = vt.findViewById(R.id.tv_totaltransaksi1);
 
-        ambiltotal();
+
 
 
         // TOMBOL CENSEL
@@ -134,7 +134,7 @@ public class TransaksiKaryawanFragment extends Fragment{
 
         vt.findViewById(R.id.btn_cancel1).setOnClickListener((view) -> {
 
-            ambiltotal();
+
 
         });
 
@@ -151,76 +151,80 @@ public class TransaksiKaryawanFragment extends Fragment{
             String Sbarkod = etBarkod.getText().toString();
             String Snama = etNama.getText().toString();
             String Sjml = etJml.getText().toString();
-            String logapa = "Transaksi Karyawan";
-
-//            String Stotal = tvtotal.getText().toString();
-
-//            String Stotaltransaksi = tvtotaltransaksi.getText().toString();
-            //String Shrgawal = etHrgawal.getText().toString();
-            //String Sjmlud = jmlud.toString();
 
             if (Snama.equals("") || Sjml.equals("")) {
                 etJml.setError("Silahkan ISI data dengan BENAR!!!");
                 etJml.requestFocus();
 
-
             } else {
-
-
-                // UPDATE TOTAL PEMBAYARAN PADA TABEL TRANSAKSI 1
-                totalupdateTransaksi = totalTransaksi + stotal; /** TOTALTRANSAKSI DARI FUNGSI AMBILTOTAL() DAN STOTAL DARI FUNGSI PENJUMLAHAN KETIKA  USER MENGINPUTKAN JUMLAH */
-                totalUpdateLaba = totalLabaint + Laba;
-                totalUTS = Integer.toString(totalupdateTransaksi);
-                totalULS = Integer.toString(totalUpdateLaba);
 
                 Long timestampl = System.currentTimeMillis();
                 String timestamp = timestampl.toString();
 
-
                 // end UPDATE TOTAL PEMBAYARAN PADA TABEL TRANSAKSI 1 =========================
-
                 inputDatabase(new TransaksiKaryawan(
                                 Sbarkod,
                                 Snama,
-                                Sjml,
-                                stotal.toString(),
-                                Laba.toString()), //IKI VARIABEL MEMINTA || DATA TRANSAKSI BARANG
-
-                        new LogHistory(
-                                Sbarkod,
-                                Snama,
-                                Sjml, logapa), // IKI LOG KELUAR MASUK TRANSAKSI KARYAWAN
-
-                        Sbarkod, jmlud, //jmlud DARI  PENJUMLAHAN SETELAH MENGISI INPUT TEXT JML (BUTTON BARKODE)
-                        totalUTS, totalULS, timestamp); // HASIL TOTAL PEMBAYARAN
-
-                inputDataLaba(new TransaksiKaryawan(
-                                Snama,
-                                Sjml,
-                                Laba.toString())
-                        ,timestamp);
+                                Sjml), timestamp); // HASIL TOTAL PEMBAYARAN
 
                 /**
                  * MENSET BARKOD MENJADI ENABLE LAGI KARENA JIKA BARANG DITEMUKAN DARI DATABASE EDTI TEXT BARKOD DI SET MENJADI DISABLE
                  * DAN MENSET NAMA DAN JUMLAH MENJADI KOSONG LAGI
                  */
                 etBarkod.setEnabled(true);
-//                etBarkod.setText(Integer.toString(totalBayar));
                 etNama.setText("");
                 etJml.setText("");
-//                tvtotaltransaksi.setText("--");
-
-//                ettotal.setText("");
-
             }
 
-            ambiltotal();
 
 
         });
 //*/
 
+        /**
+         * =========================================================================================================================================================(STAR)
+         * FUNGSI MENDAPATKAN NILAI TOTAL TRANSAKSI DARI TABEL TRANSAKSI FIREBASE
+         */
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            database = FirebaseDatabase.getInstance().getReference().child(GlobalVariabel.Toko).child(GlobalVariabel.Transaksi).child(uid);
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
 
+                    String totaltransaksi = dataSnapshot2.child("totalTransaksi").getValue(String.class);
+                    String totallaba = dataSnapshot2.child("totalLaba").getValue(String.class);
+
+                    if (dataSnapshot2.child("totalTransaksi").exists() || dataSnapshot2.child("totalLaba").exists()){
+                        DecimalFormat decim = new DecimalFormat("#,###.##");
+                        tvtotaltransaksi.setText("Rp. "+decim.format(Integer.parseInt(totaltransaksi)));
+
+                        totalTransaksi = Integer.parseInt(totaltransaksi);
+                        totalLabaint =  Integer.parseInt(totallaba);
+
+//                        Toast.makeText(getActivity(), "Data ada tapi NULL", Toast.LENGTH_SHORT).show();
+                    } else {
+                        totalTransaksi = 0;
+                        totalLabaint = 0;
+//                        Toast.makeText(getActivity(), "Data CEK", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+
+            });
+        }
+
+        /**
+         * =========================================================================================================================================================(STAR)
+         */
 
 
         return vt;
@@ -236,29 +240,20 @@ public class TransaksiKaryawanFragment extends Fragment{
 
         if (sBarkod.equals("")) { /** JIKA BARCOD TIDAK DIISI MAKA AKAN MENGEKSEKUSI FUNGSI SCAN */
             scane();
-//                        etBarkod.setError("Silahkan masukkan code"); // MAUNE TES MOD
-//                        etBarkod.requestFocus();
 
         } else { /** JIKA DIISI MAKA AKAH DILAKUKAN PENCARIAN DATABASE */
 
             String etBarkod1 = etBarkod.getText().toString();
-//            etBarkod1.toLowerCase();
 
             database = FirebaseDatabase.getInstance().getReference().child(GlobalVariabel.Toko).child(GlobalVariabel.Gudang).child(etBarkod1);
             database.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    String hargaawal = dataSnapshot.child("hargaawal").getValue(String.class);
                     String nama = dataSnapshot.child("nama").getValue(String.class);
-                    String jml = dataSnapshot.child("jml").getValue(String.class);
                     String hrgjual = dataSnapshot.child("hargajual").getValue(String.class);
 
                     etNama.setText(nama); /** MEMUNCULKAN NAMA DARI DATABASE JIKA ADA */
-                    //etJml.setText(jml);
-                    //shrgjual1.setText(hrgjual);
-
-                    String sNama = etNama.getText().toString();
 
                     /**
                      * VERIFIKASI BARKOD APAKAH ADA DI DATABASE FIREBASE
@@ -288,25 +283,15 @@ public class TransaksiKaryawanFragment extends Fragment{
                                 if (sJml.equals("")) { /** INISIALISASI MENGHINDARI EROR JIKA EDIT TEXT KOSONG ATAU USER MELAKUKAN PENGHAPUSAN JUMLAH DI EDIT TEXT */
                                     sjml=0;
 
-
                                 } else { /** JIKA EDIT TEXT JUMLAH TIDAK KOSONG MAKA DILAKUKAN KONVERSI DATA DARI STRING KE INTEGER */
                                     sjml = Integer.parseInt(sJml);
                                 }
 
                                 shrgjual = Integer.parseInt(hrgjual); /** KONVERSI VALUE HARGA JUAL DARI DATABASE FIREBASE */
-                                hargaAwalInt = Integer.parseInt(hargaawal);
                                 stotal = sjml * shrgjual; /** DILAKUKAN PENJUMLAHAN UNTUK MENDAPATKAN TOTAL HARGA BARANG DIKALI JUMLAH BARANG*/
-                                Laba = stotal - (sjml * hargaAwalInt);
-
-
-                                jmlu = Integer.parseInt(jml); /** KONVERSI VALUE JUMLAH BARANG DARI DATABASE FIREBASE */
-                                jmludi = jmlu - sjml; /** PENJUMLAHAN VALUE JUMLAH BARANG DARI DATABASE FIREBASE DIKURANGI JUMLAH TRANSAKSI DARI EDIT TEXT USER */
-                                jmlud = Integer.toString(jmludi); /** KONVERSI VALUE JUMLAH UNTUK MELAKUKAN UPDATE JUMLAH BARANG DI DATABASE FIREBASE */
-
 
                                 DecimalFormat decim = new DecimalFormat("#,###.##");
                                 tvtotal.setText("Rp. "+decim.format(stotal));/** MENAMPILKAN TOTAL HARGA KE VIEW LAYOUT (KONVERSI VALUE TOTAL HARGA BARANG) */
-//                                tvtotal.setText(Integer.toString(stotal));
                             }
 
                             @Override
@@ -346,28 +331,14 @@ public class TransaksiKaryawanFragment extends Fragment{
      * PROSES PUSH DATA KE FIREBASE
      * @deprecated melakukan input data transaksi log dan update barang setelah transaksi
      * @param transaksiKaryawan trasaksi data barang
-     * @param log data log transaksi karyawan
-     * @param barkod barkod untuk menentukan lokasi barang yang di update
-     * @param ud value hasil update barang setelah transaksi
-     * @param udtr  value total pembayaran
      */
-    private void inputDatabase(TransaksiKaryawan transaksiKaryawan, LogHistory log, String barkod, String ud, String udtr, String udla, String timestamp) {
+    private void inputDatabase(TransaksiKaryawan transaksiKaryawan, String timestamp) {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // Name, email address, and profile photo Url
             String name = user.getDisplayName();
             String uid = user.getUid();
-
-            /**
-             * DATA UPDATE JUMLAH STOK SAAT DILAKUKAN TRANSAKSI
-             */
-            database1.child(GlobalVariabel.Toko)
-                    .child(GlobalVariabel.Gudang)
-                    .child(barkod)
-                    .child("jml")
-                    .setValue(ud);
-
 
 
             /**
@@ -378,21 +349,6 @@ public class TransaksiKaryawanFragment extends Fragment{
                     .child(timestamp)
                     .setValue(transaksiKaryawan);
 
-            /**
-             * DATA TOTAL PEMBAYARAN TABEL TRANSAKSI 1
-             */
-            database1.child(GlobalVariabel.Toko)
-                    .child(GlobalVariabel.Transaksi+"/"+uid)
-                    .child("totalTransaksi")
-                    .setValue(udtr);
-
-            /**
-             * DATA TOTAL LABA TABEL TRANSAKSI 1
-             */
-            database1.child(GlobalVariabel.Toko)
-                    .child(GlobalVariabel.Transaksi+"/"+uid)
-                    .child("totalLaba")
-                    .setValue(udla);
 
             /**
              * DATA KARYAWAN YANG MELAKUKAN TRANSAKSI
@@ -403,14 +359,6 @@ public class TransaksiKaryawanFragment extends Fragment{
             database1.child(GlobalVariabel.Toko+"/"+GlobalVariabel.Transaksi+"/"+uid)
                     .child("uid")
                     .setValue(uid);
-
-            /**
-             * INPUT LOG TRANSAKSI KARYAWAN
-             */
-            database1.child(GlobalVariabel.Toko)
-                    .child(GlobalVariabel.Log)
-                    .child(timestamp)
-                    .setValue(log);
 
 
             /**
@@ -426,16 +374,6 @@ public class TransaksiKaryawanFragment extends Fragment{
 
     }
 
-    private void inputDataLaba(TransaksiKaryawan transaksiKaryawan, String timestamp){
-
-        /**
-         * DATA LABA YANG MASUK TABEL LABA
-         */
-        database1.child(GlobalVariabel.Toko)
-                .child(GlobalVariabel.Laba)
-                .child(timestamp)
-                .setValue(transaksiKaryawan);
-    }
 
     /**
      * ================================================================================================(END)
@@ -473,67 +411,7 @@ public class TransaksiKaryawanFragment extends Fragment{
      * ==============================================================================================(STAR)
      */
 
-    /**
-     * =========================================================================================================================================================(STAR)
-     * FUNGSI MENDAPATKAN NILAI TOTAL TRANSAKSI DARI TABEL TRANSAKSI FIREBASE
-     */
-    private void ambiltotal(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-//            String name = user.getDisplayName();
-            String uid = user.getUid();
-            database = FirebaseDatabase.getInstance().getReference().child(GlobalVariabel.Toko).child(GlobalVariabel.Transaksi).child(uid);
-            database.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
-//                        String totalbayar = dataSnapshot2.child("total").getValue(String.class);
-                    String totaltransaksi = dataSnapshot2.child("totalTransaksi").getValue(String.class);
-                    String totallaba = dataSnapshot2.child("totalLaba").getValue(String.class);
 
-                    if (dataSnapshot2.child("totalTransaksi").exists() || dataSnapshot2.child("totalLaba").exists()){
-                        DecimalFormat decim = new DecimalFormat("#,###.##");
-                        tvtotaltransaksi.setText("Rp. "+decim.format(Integer.parseInt(totaltransaksi)));
-
-                        totalTransaksi = Integer.parseInt(totaltransaksi);
-                        totalLabaint =  Integer.parseInt(totallaba);
-
-//                        Toast.makeText(getActivity(), "Data ada tapi NULL", Toast.LENGTH_SHORT).show();
-                    } else {
-                        totalTransaksi = 0;
-                        totalLabaint = 0;
-//                        Toast.makeText(getActivity(), "Data CEK", Toast.LENGTH_SHORT).show();
-                    }
-
-//                    if (TextUtils.isEmpty(totaltransaksi)) {
-//                        totalTransaksi = 0;
-//                    } else {
-//                        DecimalFormat decim = new DecimalFormat("#,###.##");
-//                        tvtotaltransaksi.setText("Rp. "+decim.format(Integer.parseInt(totaltransaksi)));
-////                        tvtotaltransaksi.setText(totaltransaksi);
-//                        tvtotaltransaksi1.setText(totaltransaksi);
-//
-//
-////                    totalTransaksi = Integer.parseInt(totaltransaksi);
-//                        totalTransaksi = Integer.parseInt(totaltransaksi);
-//                    }
-
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-
-            });
-        }
-    }
-
-    /**
-     * =========================================================================================================================================================(STAR)
-     */
 
 }
 
