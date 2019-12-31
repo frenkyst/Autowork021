@@ -4,22 +4,17 @@ public class TransaksiKaryawan {
     private String barkod;
     private String nama;
     private String jml;
-    private String total;
+    private String namaKaryawan;
+    private String uid;
+    private String timestamp;
 
-    public TransaksiKaryawan(String barkod, String nama, String jml) {
+    public TransaksiKaryawan(String barkod, String nama, String jml, String namaKaryawan, String uid, String timestamp) {
         this.barkod = barkod;
         this.nama = nama;
         this.jml = jml;
-    }
-
-    private String laba;
-
-    public TransaksiKaryawan(String barkod, String nama, String jml, String total, String laba) {
-        this.barkod = barkod;
-        this.nama = nama;
-        this.jml = jml;
-        this.total = total;
-        this.laba = laba;
+        this.namaKaryawan = namaKaryawan;
+        this.uid = uid;
+        this.timestamp = timestamp;
     }
 
     public String getBarkod() {
@@ -46,20 +41,28 @@ public class TransaksiKaryawan {
         this.jml = jml;
     }
 
-    public String getTotal() {
-        return total;
+    public String getNamaKaryawan() {
+        return namaKaryawan;
     }
 
-    public void setTotal(String total) {
-        this.total = total;
+    public void setNamaKaryawan(String namaKaryawan) {
+        this.namaKaryawan = namaKaryawan;
     }
 
-    public String getLaba() {
-        return laba;
+    public String getUid() {
+        return uid;
     }
 
-    public void setLaba(String laba) {
-        this.laba = laba;
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override
@@ -67,7 +70,8 @@ public class TransaksiKaryawan {
         return " "+barkod+"\n" +
                 " "+nama+"\n" +
                 " "+jml+"\n" +
-                " "+total+"\n"+
-                " "+laba;
+                " "+namaKaryawan+"\n"+
+                " "+uid+"\n"+
+                " "+timestamp;
     }
 }

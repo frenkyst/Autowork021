@@ -23,27 +23,16 @@ public class Meminta {
     public Meminta() {
     }
 
-    // MODEL INPUT DATA LOG TRANSAKSI DATA (UPDATE DATA STOK, TRANSAKSI PENJUALAN)
-    public Meminta(String barkod, String nama, String jml) {
-        this.barkod = barkod;
-        this.nama = nama;
-        this.jml = jml;
-    }
 
-    // MODEL INPUT DATA KALKULASI TOTAL DARI TRANSAKSI PENJUALAN (jml = Total =>  |  total = total)
-    public Meminta(String total) {
-
-        this.total = total;
-    }
 
 
     // MODEL INPUT DATA TRANSAKSI 1
-    public Meminta(String barkod, String nama, String jml, String total) {
-        this.barkod = barkod;
-        this.nama = nama;
-        this.jml = jml;
-        this.total = total;
-    }
+//    public Meminta(String barkod, String nama, String jml, String total) {
+//        this.barkod = barkod;
+//        this.nama = nama;
+//        this.jml = jml;
+//        this.total = total;
+//    }
 
     // MODEL INPUT DATA BARANG BARU YANG BELUM PERNAH ADA SEBELUMNYA DAN MENJADI ADA
 

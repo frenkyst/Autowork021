@@ -152,37 +152,48 @@ public class TambahDataFragment extends Fragment {
     private void submit(Meminta meminta) {
 
 
+
         database.child(GlobalVariabel.Toko).child("Trigger");
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (!dataSnapshot.exists()) {
-                    database1.child(GlobalVariabel.Toko)
-                            .child("Trigger")
-                            .child("STOK BARU")
-//                .child(id)
-                            .setValue(meminta);
+                if (!dataSnapshot.child("Trigger").exists()) {
+                    if (!dataSnapshot.child("Trigger").exists()) {
+                        database1.child(GlobalVariabel.Toko)
+                                .child("Trigger/Trigger")
+                                .child("STOK BARU")
+                                .setValue(meminta);
 
-                    Toast.makeText(getActivity(),
-                            "Data BERHASIL  di input!!",
-                            Toast.LENGTH_SHORT).show();
-                    database.removeEventListener(this);
+                        Toast.makeText(getActivity(),
+                                "Data BERHASIL  di input!!",
+                                Toast.LENGTH_SHORT).show();
+                        database.removeEventListener(this);
 
-                    /**
-                     * SET TEXTVIEW MEJADI KOSONG
-                     */
-                    etbarkod.setText("");
-                    etnama.setText("");
-                    etjml.setText("");
-                    ethrgawal.setText("");
-                    ethrgjual.setText("");
+                        /**
+                         * SET TEXTVIEW MEJADI KOSONG
+                         */
+                        etbarkod.setText("");
+                        etnama.setText("");
+                        etjml.setText("");
+                        ethrgawal.setText("");
+                        ethrgjual.setText("");
+
+                        loading = ProgressDialog.show(getActivity(),
+                                null,
+                                "SEBENTAR...",
+                                true,
+                                false);
+
+                        loading.dismiss();
+                    }
 
                 } else {
-                    Toast.makeText(getActivity(),
-                            "Data GAGAL  di input!!",
-                            Toast.LENGTH_SHORT).show();
-                    database.removeEventListener(this);
+                    loading = ProgressDialog.show(getActivity(),
+                            null,
+                            "SEBENTAR...",
+                            true,
+                            false);
                 }
 
             }

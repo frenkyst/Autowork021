@@ -2,6 +2,7 @@ package com.example.autowork;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public class UpdatestokdataFragment extends Fragment {
     }
 
     private DatabaseReference database, database1;
+    private ProgressDialog loading;
 //    private FirebaseFunctions mFunctions;
 // ...
 
@@ -139,30 +141,40 @@ public class UpdatestokdataFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.exists()){
-                    Toast.makeText(getActivity(),
-                            "Data GAGAL  di input!!",
-                            Toast.LENGTH_SHORT).show();
-                    database.removeEventListener(this);
+                if(!dataSnapshot.child("Trigger").exists()){
+                    if(!dataSnapshot.child("Trigger").exists()){
+                        database1.child(GlobalVariabel.Toko)
+                                .child("Trigger/Trigger")
+                                .child("PENAMBAHAN")
+                                .setValue(updateStokMasuk);
+
+                        Toast.makeText(getActivity(),
+                                "Data BERHASIL  di input!!",
+                                Toast.LENGTH_SHORT).show();
+                        database.removeEventListener(this);
+
+                        etBarkod.setEnabled(true);
+                        etBarkod.setText("");
+                        etNama.setText("");
+                        etJml.setText("");
+                        etJmlstok.setText("");
+                        tvJmlplus.setText("");
+
+                        loading = ProgressDialog.show(getActivity(),
+                                null,
+                                "SEBENTAR...",
+                                true,
+                                false);
+
+                        loading.dismiss();
+                    }
 
                 } else {
-
-                    database1.child(GlobalVariabel.Toko)
-                            .child("Trigger")
-                            .child("PENAMBAHAN")
-                            .setValue(updateStokMasuk);
-
-                    Toast.makeText(getActivity(),
-                            "Data BERHASIL  di input!!",
-                            Toast.LENGTH_SHORT).show();
-                    database.removeEventListener(this);
-
-                    etBarkod.setEnabled(true);
-                    etBarkod.setText("");
-                    etNama.setText("");
-                    etJml.setText("");
-                    etJmlstok.setText("");
-                    tvJmlplus.setText("");
+                    loading = ProgressDialog.show(getActivity(),
+                            null,
+                            "SEBENTAR...",
+                            true,
+                            false);
                 }
 
             }
