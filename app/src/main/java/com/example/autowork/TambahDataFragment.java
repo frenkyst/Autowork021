@@ -69,7 +69,8 @@ public class TambahDataFragment extends Fragment {
                     String Sjml = etjml.getText().toString();
                     String Shrgawal = ethrgawal.getText().toString();
                     String Shrgjual = ethrgjual.getText().toString();
-                    String logapa  = "Barang Baru";
+                    Long timestampl = System.currentTimeMillis();
+                    String timestamp = timestampl.toString();
 
                     if (dataSnapshot.child(Sbarkod).exists()) {
 
@@ -100,11 +101,8 @@ public class TambahDataFragment extends Fragment {
                                             Snama,
                                             Sjml,
                                             Shrgawal,
-                                            Shrgjual),
-                                    new LogHistory(
-                                            Sbarkod,
-                                            Snama,
-                                            Sjml, logapa),
+                                            Shrgjual,
+                                            timestamp),
                                     Sbarkod);
                         }
 
@@ -149,29 +147,14 @@ public class TambahDataFragment extends Fragment {
      * PROSES PUSH DATA KE FIREBASE
      * @deprecated push data barang baru
      * @param meminta data barang
-     * @param log data log barang
      * @param id key lokasi penyimpanan sama dengan barkod
      */
-    private void submit(Meminta meminta, LogHistory log,String id) {
+    private void submit(Meminta meminta, String id) {
         database.child(GlobalVariabel.Toko)
                 .child(GlobalVariabel.Gudang)
                 .child(id)
-                //.child(prikey)
                 .setValue(meminta);
 
-        Long timestampl = System.currentTimeMillis();
-        String timestamp = timestampl.toString();
-
-        /**
-         * PUSH DATA LOG
-         */
-        database.child(GlobalVariabel.Toko)
-                .child(GlobalVariabel.Log)
-                .child(timestamp)
-                //.child(prikey)
-                .setValue(log);
-
-//        loading.dismiss();
 
         /**
          * SET TEXTVIEW MEJADI KOSONG

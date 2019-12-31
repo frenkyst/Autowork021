@@ -15,7 +15,7 @@ public class Meminta {
 
     private String total;
 
-    private String jmlplus;
+    private String timestamp;
 
 
 
@@ -46,14 +46,15 @@ public class Meminta {
     }
 
     // MODEL INPUT DATA BARANG BARU YANG BELUM PERNAH ADA SEBELUMNYA DAN MENJADI ADA
-    public Meminta(String barkod, String nama, String jml, String hargaawal, String hargajual) {
+
+
+    public Meminta(String barkod, String nama, String jml, String hargaawal, String hargajual, String timestamp) {
         this.barkod = barkod;
         this.nama = nama;
         this.jml = jml;
-        //this.key = key;
         this.hargaawal = hargaawal;
         this.hargajual = hargajual;
-        //this.total = total;
+        this.timestamp = timestamp;
     }
 
     public String getTotal() {
@@ -112,6 +113,14 @@ public class Meminta {
         this.hargajual = hargajual;
     }
 
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public String toString() {
         return " "+barkod+"\n" +
@@ -119,6 +128,7 @@ public class Meminta {
                 " "+jml+"\n" +
                 " "+hargaawal+"\n" +
                 " "+hargajual+"\n" +
+                " "+timestamp+"\n" +
                 " "+total;
     }
 
