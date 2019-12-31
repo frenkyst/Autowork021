@@ -106,30 +106,24 @@ public class UpdatestokdataFragment extends Fragment {
         vt.findViewById(R.id.btn_updatestok).setOnClickListener((view) -> {
 
             String Sbarkod = etBarkod.getText().toString();
-            String Sjml = etJml.getText().toString();
-            String Sjmlplus = tvJmlplus.getText().toString();
             String Snama = etNama.getText().toString();
-            String logapa = "Update Stok";
+            String Sjml = etJml.getText().toString();
 
-            if (Sjml.equals("")) {
+
+            if (Sjml.equals("") || Snama.equals("")) {
                 etJml.setError("Silahkan masukkan jumlah");
                 etJml.requestFocus();
 
-
             } else {
 
-
+                Long timestampl = System.currentTimeMillis();
+                String timestamp = timestampl.toString();
                pushData(new  UpdateStokMasuk(
-                                    Sbarkod, Sjmlplus)); //jmlud DARI  PENJUMLAHAN SETELAH MENGISI INPUT TEXT JML (BUTTON BARKODE)
+                       Sbarkod,
+                       Snama,
+                       Sjml,
+                       timestamp)); //jmlud DARI  PENJUMLAHAN SETELAH MENGISI INPUT TEXT JML (BUTTON BARKODE)
 
-                etBarkod.setEnabled(true);
-                etBarkod.setText("");
-                etNama.setText("");
-                etJml.setText("");
-                etJmlstok.setText("");
-                tvJmlplus.setText("");
-//                ettotal.setText("");
-                //ethrgjual.setText("");
             }
 
         });
@@ -140,28 +134,45 @@ public class UpdatestokdataFragment extends Fragment {
     // PROSES PUSH DATA KE FIREBASE
     private void pushData(UpdateStokMasuk updateStokMasuk) {
 
-        database1.child(GlobalVariabel.Toko)
-                .child(GlobalVariabel.Gudang)
-                .child("PENAMBAHAN")
-                .setValue(updateStokMasuk);
+        database = FirebaseDatabase.getInstance().getReference().child(GlobalVariabel.Toko).child(GlobalVariabel.Penambahan);
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String nama = dataSnapshot.child("nama").getValue(String.class);
+                String jml = dataSnapshot.child("jml").getValue(String.class);
 
-//        mFunctions = FirebaseFunctions.getInstance();
+                if(dataSnapshot.exists()){
+                    Toast.makeText(getActivity(),
+                            "Data GAGAL  di input!!",
+                            Toast.LENGTH_SHORT).show();
+                    database.removeEventListener(this);
 
+                } else {
 
+                    database1.child(GlobalVariabel.Toko)
+                            .child(GlobalVariabel.Penambahan)
+                            .setValue(updateStokMasuk);
 
-//        Long timestampl = System.currentTimeMillis();
-//        String timestamp = timestampl.toString();
-//
-//        database1.child(GlobalVariabel.Toko)
-//                .child(GlobalVariabel.Log)
-//                .child(timestamp)
-//                .setValue(log);
+                    Toast.makeText(getActivity(),
+                            "Data BERHASIL  di input!!",
+                            Toast.LENGTH_SHORT).show();
+                    database.removeEventListener(this);
 
+                    etBarkod.setEnabled(true);
+                    etBarkod.setText("");
+                    etNama.setText("");
+                    etJml.setText("");
+                    etJmlstok.setText("");
+                    tvJmlplus.setText("");
+                }
 
-//        etBarkod.setEnabled(true);
-        Toast.makeText(getActivity(),
-                "Data Berhasil Tambah",
-                Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

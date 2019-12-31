@@ -9,6 +9,7 @@ public class GlobalVariabel {
             Transaksi = "Transaksi "+UbahNo,
     NotaPembayaran = "Nota Pembayaran "+UbahNo,
     Laba = "Laba "+UbahNo,
+    Penambahan = "PENAMBAHAN "+UbahNo,
             UserMan = "UserMan "+UbahNo;
 
 
