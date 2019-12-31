@@ -134,12 +134,10 @@ public class UpdatestokdataFragment extends Fragment {
     // PROSES PUSH DATA KE FIREBASE
     private void pushData(UpdateStokMasuk updateStokMasuk) {
 
-        database = FirebaseDatabase.getInstance().getReference().child(GlobalVariabel.Toko).child(GlobalVariabel.Penambahan);
+        database = FirebaseDatabase.getInstance().getReference().child(GlobalVariabel.Toko).child("Trigger");
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String nama = dataSnapshot.child("nama").getValue(String.class);
-                String jml = dataSnapshot.child("jml").getValue(String.class);
 
                 if(dataSnapshot.exists()){
                     Toast.makeText(getActivity(),
@@ -150,7 +148,8 @@ public class UpdatestokdataFragment extends Fragment {
                 } else {
 
                     database1.child(GlobalVariabel.Toko)
-                            .child(GlobalVariabel.Penambahan)
+                            .child("Trigger")
+                            .child("PENAMBAHAN")
                             .setValue(updateStokMasuk);
 
                     Toast.makeText(getActivity(),

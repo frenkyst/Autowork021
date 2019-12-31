@@ -3,23 +3,22 @@ package com.example.autowork;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.autowork.model.LogHistory;
 import com.example.autowork.model.Meminta;
-import com.example.autowork.model.UserMan;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 
 
 /**
@@ -32,7 +31,9 @@ public class TambahDataFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private DatabaseReference database;
+    private ProgressDialog loading;
+
+    private DatabaseReference database,database1;
     private EditText etbarkod, etnama, etjml, ethrgawal, ethrgjual;
 //    private ProgressDialog loading;
 //    private Button btn_tambahbarang, btn_cencel;
@@ -44,6 +45,7 @@ public class TambahDataFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_tambah_data, container, false);
 
         database = FirebaseDatabase.getInstance().getReference();
+        database1 = FirebaseDatabase.getInstance().getReference();
 //
         etbarkod = v.findViewById(R.id.et_barkod);
         etnama = v.findViewById(R.id.et_nama);
@@ -102,8 +104,7 @@ public class TambahDataFragment extends Fragment {
                                             Sjml,
                                             Shrgawal,
                                             Shrgjual,
-                                            timestamp),
-                                    Sbarkod);
+                                            timestamp));
                         }
 
                     }
@@ -147,32 +148,51 @@ public class TambahDataFragment extends Fragment {
      * PROSES PUSH DATA KE FIREBASE
      * @deprecated push data barang baru
      * @param meminta data barang
-     * @param id key lokasi penyimpanan sama dengan barkod
      */
-    private void submit(Meminta meminta, String id) {
-        database.child(GlobalVariabel.Toko)
-                .child(GlobalVariabel.Gudang)
-                .child(id)
-                .setValue(meminta);
+    private void submit(Meminta meminta) {
 
 
-        /**
-         * SET TEXTVIEW MEJADI KOSONG
-         */
-        etbarkod.setText("");
-        etnama.setText("");
-        etjml.setText("");
-        ethrgawal.setText("");
-        ethrgjual.setText("");
+        database.child(GlobalVariabel.Toko).child("Trigger");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-        //View v = inflater.inflate(R.layout.fragment_in, container, false);
+                if (!dataSnapshot.exists()) {
+                    database1.child(GlobalVariabel.Toko)
+                            .child("Trigger")
+                            .child("STOK BARU")
+//                .child(id)
+                            .setValue(meminta);
 
-        /**
-         * NOTIF DATA BERHASIL DI TAMBAHKAN KE FIREBASE
-         */
-        Toast.makeText(getActivity(),
-                "Data Berhasil ditambahkan",
-                Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),
+                            "Data BERHASIL  di input!!",
+                            Toast.LENGTH_SHORT).show();
+                    database.removeEventListener(this);
+
+                    /**
+                     * SET TEXTVIEW MEJADI KOSONG
+                     */
+                    etbarkod.setText("");
+                    etnama.setText("");
+                    etjml.setText("");
+                    ethrgawal.setText("");
+                    ethrgjual.setText("");
+
+                } else {
+                    Toast.makeText(getActivity(),
+                            "Data GAGAL  di input!!",
+                            Toast.LENGTH_SHORT).show();
+                    database.removeEventListener(this);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
