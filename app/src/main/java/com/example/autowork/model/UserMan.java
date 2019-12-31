@@ -9,12 +9,12 @@ public class UserMan {
 //    private String total;
 
 
-    public UserMan(String nama, String email, String key, String uid) {
-        this.Nama = nama;
-        this.email = email;
-        this.key = key;
-        this.uid = uid;
-    }
+//    public UserMan(String nama, String email, String key, String uid) {
+//        this.Nama = nama;
+//        this.email = email;
+//        this.key = key;
+//        this.uid = uid;
+//    }
 
     public UserMan(){ }
 

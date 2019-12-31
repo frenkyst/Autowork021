@@ -151,7 +151,11 @@ public class TambahDataFragment extends Fragment {
      */
     private void submit(Meminta meminta) {
 
-
+        loading = ProgressDialog.show(getActivity(),
+                null,
+                "SEBENTAR...",
+                true,
+                false);
 
         database.child(GlobalVariabel.Toko).child("Trigger");
         database.addValueEventListener(new ValueEventListener() {
@@ -179,21 +183,13 @@ public class TambahDataFragment extends Fragment {
                         ethrgawal.setText("");
                         ethrgjual.setText("");
 
-                        loading = ProgressDialog.show(getActivity(),
-                                null,
-                                "SEBENTAR...",
-                                true,
-                                false);
+
 
                         loading.dismiss();
                     }
 
                 } else {
-                    loading = ProgressDialog.show(getActivity(),
-                            null,
-                            "SEBENTAR...",
-                            true,
-                            false);
+
                 }
 
             }

@@ -10,12 +10,12 @@ public class Transaksi {
     public Transaksi(){ }
 
 
-    public Transaksi(String namaKaryawan, String totalTransaksi, String uid, String key) {
-        this.namaKaryawan = namaKaryawan;
-        this.totalTransaksi = totalTransaksi;
-        this.uid = uid;
-        this.key = key;
-    }
+//    public Transaksi(String namaKaryawan, String totalTransaksi, String uid, String key) {
+//        this.namaKaryawan = namaKaryawan;
+//        this.totalTransaksi = totalTransaksi;
+//        this.uid = uid;
+//        this.key = key;
+//    }
 
 
     public String getNamakaryawan() {

@@ -136,6 +136,12 @@ public class UpdatestokdataFragment extends Fragment {
     // PROSES PUSH DATA KE FIREBASE
     private void pushData(UpdateStokMasuk updateStokMasuk) {
 
+        loading = ProgressDialog.show(getActivity(),
+                null,
+                "SEBENTAR...",
+                true,
+                false);
+
         database = FirebaseDatabase.getInstance().getReference().child(GlobalVariabel.Toko).child("Trigger");
         database.addValueEventListener(new ValueEventListener() {
             @Override
@@ -160,21 +166,11 @@ public class UpdatestokdataFragment extends Fragment {
                         etJmlstok.setText("");
                         tvJmlplus.setText("");
 
-                        loading = ProgressDialog.show(getActivity(),
-                                null,
-                                "SEBENTAR...",
-                                true,
-                                false);
-
                         loading.dismiss();
                     }
 
                 } else {
-                    loading = ProgressDialog.show(getActivity(),
-                            null,
-                            "SEBENTAR...",
-                            true,
-                            false);
+
                 }
 
             }

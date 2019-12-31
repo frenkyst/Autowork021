@@ -5,28 +5,16 @@ public class Meminta {
     private String barkod;
     private String nama;
     private String jml;
-
     private String key;
-
-
-
     private String hargaawal;
     private String hargajual;
-
     private String total;
-
     private String timestamp;
-
-
 
 
     public Meminta() {
     }
 
-
-
-
-    // MODEL INPUT DATA TRANSAKSI 1
 //    public Meminta(String barkod, String nama, String jml, String total) {
 //        this.barkod = barkod;
 //        this.nama = nama;
@@ -35,8 +23,6 @@ public class Meminta {
 //    }
 
     // MODEL INPUT DATA BARANG BARU YANG BELUM PERNAH ADA SEBELUMNYA DAN MENJADI ADA
-
-
     public Meminta(String barkod, String nama, String jml, String hargaawal, String hargajual, String timestamp) {
         this.barkod = barkod;
         this.nama = nama;

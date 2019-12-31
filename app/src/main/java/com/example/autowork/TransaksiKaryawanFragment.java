@@ -315,6 +315,12 @@ public class TransaksiKaryawanFragment extends Fragment{
      */
     private void inputDatabase(TransaksiKaryawan transaksiKaryawan) {
 
+        loading = ProgressDialog.show(getActivity(),
+                null,
+                "SEBENTAR...",
+                true,
+                false);
+
         database = FirebaseDatabase.getInstance().getReference().child(GlobalVariabel.Toko).child("Trigger");
         database.addValueEventListener(new ValueEventListener() {
             @Override
@@ -336,22 +342,11 @@ public class TransaksiKaryawanFragment extends Fragment{
 
                         database.removeEventListener(this);
 
-                        loading = ProgressDialog.show(getActivity(),
-                                null,
-                                "SEBENTAR...",
-                                true,
-                                false);
-
                         loading.dismiss();
                     }
 
                 } else {
 
-                    loading = ProgressDialog.show(getActivity(),
-                            null,
-                            "SEBENTAR...",
-                            true,
-                            false);
                 }
 
             }

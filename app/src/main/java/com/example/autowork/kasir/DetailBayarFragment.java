@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.example.autowork.GlobalVariabel;
 import com.example.autowork.R;
 import com.example.autowork.adapter.MemintaTransaksikasir;
-import com.example.autowork.model.LogKasir;
+import com.example.autowork.model.DetailBayar;
 import com.example.autowork.model.Meminta;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,8 +41,7 @@ public class DetailBayarFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private DatabaseReference database, fromPath, toPath, totalTopath;
-    Object Uid;
+    private DatabaseReference database, database1;
 
     private ArrayList<Meminta> daftarReq;
     private MemintaTransaksikasir memintatransaksikasir;
@@ -67,6 +66,7 @@ public class DetailBayarFragment extends Fragment {
 
 
         database = FirebaseDatabase.getInstance().getReference();
+        database1 = FirebaseDatabase.getInstance().getReference();
         TextView tv_totalBayar;
         tv_totalBayar = v.findViewById(R.id.tv_totalBayar);
 
@@ -156,33 +156,21 @@ public class DetailBayarFragment extends Fragment {
             Long timestampl = System.currentTimeMillis();
             timestamp = timestampl.toString();
             GlobalVariabel.timestamp = timestamp;
-//            String childKasir = GlobalVariabel.Toko+"/"+GlobalVariabel.Kasir+"/"+timestamp;
-
-            fromPath = FirebaseDatabase.getInstance().getReference(GlobalVariabel.Toko+"/"+GlobalVariabel.Transaksi+"/"+GlobalVariabel.uid);
-            toPath = FirebaseDatabase.getInstance().getReference(GlobalVariabel.Toko+"/"+GlobalVariabel.NotaPembayaran+"/"+timestamp);
-//            totalTopath = FirebaseDatabase.getInstance().getReference(childKasir+"/zzzzzzzzz");
 
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
                 // Name, email address, and profile photo Url
                 String name = user.getDisplayName();
-                String totalBayars;
-                totalBayars = tv_totalBayar.getText().toString();
 
-                copyRecord(fromPath,toPath,name,timestamp);
 
-                pushData(new LogKasir(
+                pushData(new DetailBayar(
                         name,
                         timestamp,
-                        "Nota Pembayaran",
-                        totalBayars));
+                        GlobalVariabel.uid));
+
+
+
             }
-
-
-            AppCompatActivity activity = (AppCompatActivity) view.getContext();
-            Fragment myFragment = new NotaPembayaranFragment();
-            activity.getSupportFragmentManager().popBackStackImmediate();
-            activity.getSupportFragmentManager().beginTransaction().replace(R.id.framekasir, myFragment).addToBackStack(null).commit();
 
 
 
@@ -197,44 +185,56 @@ public class DetailBayarFragment extends Fragment {
         return v;
     }
 
-    /**
-     *
-     * @description Memindahkan dataq transaksi ke notaPembayaran (firebase)
-     * @param fromPath key lokasi transaksi
-     * @param toPath key lokasi notaPembayaran
-     * @param nama nama kasir yang melakukan transaksi
-     * @param timeStamp waktu yang di konveersi ke angka
-     */
-    public void copyRecord(DatabaseReference fromPath, final DatabaseReference toPath, String nama, String timeStamp) {
-        fromPath.addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+    private void pushData(DetailBayar detailBayar) {
+
+        database.child(GlobalVariabel.Toko).child("Trigger");
+        database.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                toPath.setValue(dataSnapshot.getValue());
-//                totalTopath.setValue(dataSnapshot.child("zzzzzzzzz").getValue());
-//                toPath.child("detail").child("zzzzzzzzz").setValue(dataSnapshot.child("zzzzzzzzz").getValue());
-//                toPath.child("totalTransaksi").setValue(dataSnapshot.child("zzzzzzzzz").child("total").getValue());
-                toPath.child("namaKasir").setValue(nama);
-                toPath.child("kodeTransaksi").setValue(timeStamp);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (!dataSnapshot.child("TriggerBaya").exists()) {
+                    if (!dataSnapshot.child("TriggerBaya").exists()) {
+                        database1.child(GlobalVariabel.Toko)
+                                .child("Trigger/TriggerBaya")
+                                .setValue(detailBayar);
+
+                        Toast.makeText(getActivity(),
+                                "Data BERHASIL  di input!!",
+                                Toast.LENGTH_SHORT).show();
+
+                        database.removeEventListener(this);
+
+                        loading = ProgressDialog.show(getActivity(),
+                                null,
+                                "SEBENTAR...",
+                                true,
+                                false);
+
+                        loading.dismiss();
+
+                        AppCompatActivity activity = (AppCompatActivity) getContext();
+                        Fragment myFragment = new NotaPembayaranFragment();
+                        activity.getSupportFragmentManager().popBackStackImmediate();
+                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.framekasir, myFragment).addToBackStack(null).commit();
+                    }
+
+                } else {
+                    loading = ProgressDialog.show(getActivity(),
+                            null,
+                            "SEBENTAR...",
+                            true,
+                            false);
+                }
 
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-    }
-
-    private void pushData(LogKasir log) {
-        database.child(GlobalVariabel.Toko)
-                .child(GlobalVariabel.Log)
-                .child(timestamp)
-                .setValue(log);
-
-
-//        etBarkod.setEnabled(true);
-        Toast.makeText(getActivity(),
-                "Pembayaran Berhasil",
-                Toast.LENGTH_SHORT).show();
 
     }
 

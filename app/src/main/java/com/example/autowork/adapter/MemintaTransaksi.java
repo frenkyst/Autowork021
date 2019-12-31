@@ -96,7 +96,7 @@ public class MemintaTransaksi extends RecyclerView.Adapter<MemintaTransaksi.MyVi
                         switch (item.getItemId()) {
                             case R.id.item_detail:
                                 //handle menu1 click
-                                GlobalVariabel.uid = movie.getUid();
+                                GlobalVariabel.uid = movie.getKey();
                                 GlobalVariabel.invisible = "null";
 
                                 AppCompatActivity activity = (AppCompatActivity) view.getContext();
