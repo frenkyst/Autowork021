@@ -18,11 +18,8 @@ import android.widget.Toast;
 import com.example.autowork.GlobalVariabel;
 import com.example.autowork.R;
 import com.example.autowork.adapter.MemintaTransaksikasir;
-import com.example.autowork.model.LogHistory;
 import com.example.autowork.model.LogKasir;
 import com.example.autowork.model.Meminta;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -118,19 +115,12 @@ public class DetailBayarFragment extends Fragment {
                     if(dataSnapshot.child("totalTransaksi").exists()) {
                         DecimalFormat decim = new DecimalFormat("#,###.##");
                         tv_totalBayar.setText("Rp. " + decim.format(Integer.parseInt(totalbayar)));
-//                    tv_totalBayar.setText("Rp. "+totalbayar);
 
                     }
                     /**
                      * =============================================================================(END)
                      */
 
-//                    if (dataSnapshot.child("totalTransaksi").equals(null)){
-//                        Toast.makeText(getActivity(), "???????????????", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(getContext(), "???????????????", Toast.LENGTH_SHORT).show();
-////                        getActivity().finish();
-//                    }
 
                 }
 

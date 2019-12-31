@@ -16,13 +16,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.autowork.model.LogHistory;
-import com.example.autowork.model.Meminta;
+import com.example.autowork.model.UpdateStokMasuk;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.functions.FirebaseFunctions;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -38,6 +38,9 @@ public class UpdatestokdataFragment extends Fragment {
     }
 
     private DatabaseReference database, database1;
+//    private FirebaseFunctions mFunctions;
+// ...
+
 
     private EditText etBarkod, etNama, etJml, etJmlstok;
     private TextView tvJmlplus;
@@ -116,12 +119,8 @@ public class UpdatestokdataFragment extends Fragment {
             } else {
 
 
-               pushData(new LogHistory(
-                                Sbarkod,
-                                Snama,
-                                Sjml,logapa), //IKI VARIABEL CLAS LOGHISTORY
-
-                        Sbarkod, Sjmlplus); //jmlud DARI  PENJUMLAHAN SETELAH MENGISI INPUT TEXT JML (BUTTON BARKODE)
+               pushData(new  UpdateStokMasuk(
+                                    Sbarkod, Sjmlplus)); //jmlud DARI  PENJUMLAHAN SETELAH MENGISI INPUT TEXT JML (BUTTON BARKODE)
 
                 etBarkod.setEnabled(true);
                 etBarkod.setText("");
@@ -139,21 +138,24 @@ public class UpdatestokdataFragment extends Fragment {
     }
 
     // PROSES PUSH DATA KE FIREBASE
-    private void pushData(LogHistory log, String id, String ud) {
+    private void pushData(UpdateStokMasuk updateStokMasuk) {
+
         database1.child(GlobalVariabel.Toko)
                 .child(GlobalVariabel.Gudang)
-                .child(id)
-                .child("jml")
-                .setValue(ud);
+                .child("PENAMBAHAN")
+                .setValue(updateStokMasuk);
+
+//        mFunctions = FirebaseFunctions.getInstance();
 
 
-        Long timestampl = System.currentTimeMillis();
-        String timestamp = timestampl.toString();
 
-        database1.child(GlobalVariabel.Toko)
-                .child(GlobalVariabel.Log)
-                .child(timestamp)
-                .setValue(log);
+//        Long timestampl = System.currentTimeMillis();
+//        String timestamp = timestampl.toString();
+//
+//        database1.child(GlobalVariabel.Toko)
+//                .child(GlobalVariabel.Log)
+//                .child(timestamp)
+//                .setValue(log);
 
 
 //        etBarkod.setEnabled(true);
@@ -268,4 +270,7 @@ public class UpdatestokdataFragment extends Fragment {
         builder.setMessage("Apakah ingin SCAN ulang?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
+
+
+
 }
